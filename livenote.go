@@ -39,32 +39,37 @@ func NewLiveNote(prefix string) *LiveNote {
 	}
 }
 
-// AddInfo - adds an information message
+// AddInfo adds an information message
 func (r *LiveNote) AddInfo(Message ...string) {
 	for _, m := range Message {
 		addMessage(&r.ln, r.Prefix, m, Info)
 	}
 }
 
-// AddWarning - adds a warning message
+// AddWarning adds a warning message
 func (r *LiveNote) AddWarning(Message ...string) {
 	for _, m := range Message {
 		addMessage(&r.ln, r.Prefix, m, Warn)
 	}
 }
 
-// AddError - adds an error message
+// AddError adds an error message
 func (r *LiveNote) AddError(Message ...string) {
 	for _, m := range Message {
 		addMessage(&r.ln, r.Prefix, m, Error)
 	}
 }
 
-// AddAppMsg - adds an error message
+// AddAppMsg adds an application message
 func (r *LiveNote) AddAppMsg(Message ...string) {
 	for _, m := range Message {
 		addMessage(&r.ln, r.Prefix, m, App)
 	}
+}
+
+// Append adds a note object to the current list
+func (r *LiveNote) Append(ln LiveNoteInfo) {
+	r.ln = append(r.ln, ln)
 }
 
 // HasErrors - Checks if the message array has errors
@@ -150,8 +155,6 @@ func addMessage(nt *[]LiveNoteInfo, prefix, msg string, typ NoteType) {
 		Message: msg,
 		Type:    typ,
 	})
-
-	// *messages = append(*messages, msg)
 }
 
 // get dominant message
