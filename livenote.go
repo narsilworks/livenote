@@ -11,9 +11,9 @@ type NoteType string
 
 // NoteType constants
 const (
-	Info  NoteType = "INFO"
-	Warn  NoteType = "WARN"
-	Error NoteType = "ERRR"
+	Info  NoteType = "INF"
+	Warn  NoteType = "WRN"
+	Error NoteType = "ERR"
 	App   NoteType = ""
 )
 
@@ -138,7 +138,7 @@ func (lni *LiveNoteInfo) ToString() string {
 	td += string(lni.Type)
 
 	if lni.Prefix != "" {
-		td += "[" + lni.Prefix + "]"
+		td += " [" + lni.Prefix + "]"
 	}
 	td += DelimMsgType
 	td += lni.Message
