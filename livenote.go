@@ -1,3 +1,4 @@
+// LiveNote is lightweight direct logging library
 package livenote
 
 import (
@@ -18,7 +19,6 @@ const (
 
 const DelimMsgType string = `: `
 
-// LiveNote is lightweight direct logging library
 type LiveNote struct {
 	Prefix  string // Prefix
 	ln      []LiveNoteInfo
