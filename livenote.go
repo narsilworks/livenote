@@ -15,6 +15,7 @@ const (
 	Info  NoteType = "INF"
 	Warn  NoteType = "WRN"
 	Error NoteType = "ERR"
+	Fatal NoteType = "FTL"
 	App   NoteType = ""
 )
 
@@ -125,7 +126,6 @@ func (r *LiveNote) ToString() string {
 	if r.osIsWin {
 		lf = "\r\n"
 	}
-
 	sb := strings.Builder{}
 	for _, v := range r.ln {
 		sb.Write([]byte(v.ToString() + lf))
