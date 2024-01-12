@@ -41,6 +41,11 @@ func NewLiveNote(prefix string) *LiveNote {
 	}
 }
 
+// Fmt accepts format and argument to return a string
+func Fmt(format string, message ...interface{}) string {
+	return fmt.Sprintf(format, message...)
+}
+
 // AddInfo adds an information message
 func (r *LiveNote) AddInfo(Message ...string) {
 	for _, m := range Message {
@@ -72,11 +77,6 @@ func (r *LiveNote) AddAppMsg(Message ...string) {
 // Append adds a note object to the current list
 func (r *LiveNote) Append(ln LiveNoteInfo) {
 	r.ln = append(r.ln, ln)
-}
-
-// Fmt accepts format and argument to return a string
-func (r *LiveNote) Fmt(format string, message ...interface{}) string {
-	return fmt.Sprintf(format, message...)
 }
 
 // HasErrors - Checks if the message array has errors
