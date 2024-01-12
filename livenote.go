@@ -75,7 +75,7 @@ func (r *LiveNote) Append(ln LiveNoteInfo) {
 
 // Fmt accepts format and argument to return a string
 func (r *LiveNote) Fmt(format string, message ...interface{}) string {
-	return fmt.Sprintf(format, message)
+	return fmt.Sprintf(format, message...)
 }
 
 // HasErrors - Checks if the message array has errors
