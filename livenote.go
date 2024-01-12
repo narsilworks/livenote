@@ -2,6 +2,7 @@
 package livenote
 
 import (
+	"fmt"
 	"runtime"
 	"strings"
 )
@@ -72,9 +73,13 @@ func (r *LiveNote) Append(ln LiveNoteInfo) {
 	r.ln = append(r.ln, ln)
 }
 
+// Fmt accepts format and argument to return a string
+func (r *LiveNote) Fmt(format string, message ...string) string {
+	return fmt.Sprintf(format, message)
+}
+
 // HasErrors - Checks if the message array has errors
 func (r LiveNote) HasErrors() bool {
-
 	for _, ln := range r.ln {
 		if ln.Type == Error {
 			return true
@@ -85,13 +90,11 @@ func (r LiveNote) HasErrors() bool {
 
 // HasWarnings - Checks if the message array has warnings
 func (r LiveNote) HasWarnings() bool {
-
 	for _, ln := range r.ln {
 		if ln.Type == Warn {
 			return true
 		}
 	}
-
 	return false
 }
 
@@ -148,7 +151,6 @@ func (lni *LiveNoteInfo) ToString() string {
 
 // add new message to the message array
 func addMessage(nt *[]LiveNoteInfo, prefix, msg string, typ NoteType) {
-
 	msg = strings.TrimSpace(msg)
 	*nt = append(*nt, LiveNoteInfo{
 		Prefix:  prefix,
@@ -159,11 +161,9 @@ func addMessage(nt *[]LiveNoteInfo, prefix, msg string, typ NoteType) {
 
 // get dominant message
 func getDominantNoteType(msgs *[]LiveNoteInfo) NoteType {
-
 	nfo := 0
 	wrn := 0
 	err := 0
-
 	for _, msg := range *msgs {
 		switch msg.Type {
 		case Info:
@@ -174,18 +174,14 @@ func getDominantNoteType(msgs *[]LiveNoteInfo) NoteType {
 			err++
 		}
 	}
-
 	if nfo > wrn && nfo > err {
 		return Info
 	}
-
 	if wrn > nfo && wrn > err {
 		return Warn
 	}
-
 	if err > nfo && err > wrn {
 		return Error
 	}
-
 	return App
 }
