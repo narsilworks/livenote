@@ -79,6 +79,11 @@ func (r *LiveNote) Append(ln LiveNoteInfo) {
 	r.ln = append(r.ln, ln)
 }
 
+// Clear live notes
+func (r *LiveNote) Clear() {
+	r.ln = []LiveNoteInfo{}
+}
+
 // HasErrors - Checks if the message array has errors
 func (r LiveNote) HasErrors() bool {
 	for _, ln := range r.ln {
