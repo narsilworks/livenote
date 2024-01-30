@@ -74,9 +74,9 @@ func (r *LiveNote) AddAppMsg(Message ...string) {
 	}
 }
 
-// Append adds a note object to the current list
-func (r *LiveNote) Append(ln LiveNoteInfo) {
-	r.ln = append(r.ln, ln)
+// Append adds a note object or more to the current list
+func (r *LiveNote) Append(ln ...LiveNoteInfo) {
+	r.ln = append(r.ln, ln...)
 }
 
 // Clear live notes
