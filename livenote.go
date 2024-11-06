@@ -12,11 +12,12 @@ type NoteType string
 
 // NoteType constants
 const (
-	Info  NoteType = "INF"
-	Warn  NoteType = "WRN"
-	Error NoteType = "ERR"
-	Fatal NoteType = "FTL"
-	App   NoteType = ""
+	Info    NoteType = "INF"
+	Warn    NoteType = "WRN"
+	Error   NoteType = "ERR"
+	Fatal   NoteType = "FTL"
+	Success NoteType = "SUC"
+	App     NoteType = ""
 )
 
 const DelimMsgType string = `: `
@@ -42,34 +43,41 @@ func NewLiveNote(prefix string) *LiveNote {
 }
 
 // Fmt accepts format and argument to return a string
-func Fmt(format string, message ...interface{}) string {
-	return fmt.Sprintf(format, message...)
+func Fmt(format string, args ...interface{}) string {
+	return fmt.Sprintf(format, args...)
 }
 
 // AddInfo adds an information message
-func (r *LiveNote) AddInfo(Message ...string) {
-	for _, m := range Message {
+func (r *LiveNote) AddInfo(msg ...string) {
+	for _, m := range msg {
 		addMessage(&r.ln, r.Prefix, m, Info)
 	}
 }
 
 // AddWarning adds a warning message
-func (r *LiveNote) AddWarning(Message ...string) {
-	for _, m := range Message {
+func (r *LiveNote) AddWarning(msg ...string) {
+	for _, m := range msg {
 		addMessage(&r.ln, r.Prefix, m, Warn)
 	}
 }
 
 // AddError adds an error message
-func (r *LiveNote) AddError(Message ...string) {
-	for _, m := range Message {
+func (r *LiveNote) AddError(msg ...string) {
+	for _, m := range msg {
 		addMessage(&r.ln, r.Prefix, m, Error)
 	}
 }
 
+// AddSuccess adds a success message
+func (r *LiveNote) AddSuccess(msg ...string) {
+	for _, m := range msg {
+		addMessage(&r.ln, r.Prefix, m, Success)
+	}
+}
+
 // AddAppMsg adds an application message
-func (r *LiveNote) AddAppMsg(Message ...string) {
-	for _, m := range Message {
+func (r *LiveNote) AddAppMsg(msg ...string) {
+	for _, m := range msg {
 		addMessage(&r.ln, r.Prefix, m, App)
 	}
 }
@@ -84,7 +92,7 @@ func (r *LiveNote) Clear() {
 	r.ln = []LiveNoteInfo{}
 }
 
-// HasErrors - Checks if the message array has errors
+// HasErrors checks if the message array has errors
 func (r LiveNote) HasErrors() bool {
 	for _, ln := range r.ln {
 		if ln.Type == Error {
@@ -94,7 +102,7 @@ func (r LiveNote) HasErrors() bool {
 	return false
 }
 
-// HasWarnings - Checks if the message array has warnings
+// HasWarnings checks if the message array has warnings
 func (r LiveNote) HasWarnings() bool {
 	for _, ln := range r.ln {
 		if ln.Type == Warn {
@@ -104,10 +112,20 @@ func (r LiveNote) HasWarnings() bool {
 	return false
 }
 
-// HasInfos - Checks if the message array has information messages
+// HasInfos checks if the message array has information messages
 func (r LiveNote) HasInfos() bool {
 	for _, ln := range r.ln {
 		if ln.Type == Info {
+			return true
+		}
+	}
+	return false
+}
+
+// HasSuccess checks if the message array has success messages
+func (r LiveNote) HasSucceses() bool {
+	for _, ln := range r.ln {
+		if ln.Type == Success {
 			return true
 		}
 	}
@@ -126,7 +144,6 @@ func (r *LiveNote) Notes() []LiveNoteInfo {
 
 // ToString return the messages as a carriage/return delimited string
 func (r *LiveNote) ToString() string {
-
 	lf := "\n"
 	if r.osIsWin {
 		lf = "\r\n"
@@ -135,22 +152,18 @@ func (r *LiveNote) ToString() string {
 	for _, v := range r.ln {
 		sb.Write([]byte(v.ToString() + lf))
 	}
-
 	return sb.String()
 }
 
 // ToString return the messages as a carriage/return delimited string
 func (lni *LiveNoteInfo) ToString() string {
-
 	td := ""
 	td += string(lni.Type)
-
 	if lni.Prefix != "" {
 		td += "[" + lni.Prefix + "]"
 	}
 	td += DelimMsgType
 	td += lni.Message
-
 	return td
 }
 
@@ -166,9 +179,10 @@ func addMessage(nt *[]LiveNoteInfo, prefix, msg string, typ NoteType) {
 
 // get dominant message
 func getDominantNoteType(msgs *[]LiveNoteInfo) NoteType {
-	nfo := 0
-	wrn := 0
-	err := 0
+	var (
+		nfo, wrn, err, suc int
+	)
+
 	for _, msg := range *msgs {
 		switch msg.Type {
 		case Info:
@@ -177,16 +191,21 @@ func getDominantNoteType(msgs *[]LiveNoteInfo) NoteType {
 			wrn++
 		case Error:
 			err++
+		case Success:
+			suc++
 		}
 	}
-	if nfo > wrn && nfo > err {
+	if nfo > wrn && nfo > err && nfo > suc {
 		return Info
 	}
-	if wrn > nfo && wrn > err {
+	if wrn > nfo && wrn > err && wrn > suc {
 		return Warn
 	}
-	if err > nfo && err > wrn {
+	if err > nfo && err > wrn && err > suc {
 		return Error
+	}
+	if suc > nfo && suc > wrn && suc > err {
+		return Success
 	}
 	return App
 }
