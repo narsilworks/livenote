@@ -160,7 +160,9 @@ func (lni *LiveNoteInfo) ToString() string {
 	td := ""
 	if lni.Type != App {
 		td += string(lni.Type)
-		td += "[" + lni.Prefix + "]"
+		if lni.Prefix != "" {
+			td += "[" + lni.Prefix + "]"
+		}
 		td += DelimMsgType
 	}
 	td += lni.Message
