@@ -158,11 +158,11 @@ func (r *LiveNote) ToString() string {
 // ToString return the messages as a carriage/return delimited string
 func (lni *LiveNoteInfo) ToString() string {
 	td := ""
-	td += string(lni.Type)
-	if lni.Prefix != "" {
+	if lni.Type != App {
+		td += string(lni.Type)
 		td += "[" + lni.Prefix + "]"
+		td += DelimMsgType
 	}
-	td += DelimMsgType
 	td += lni.Message
 	return td
 }
